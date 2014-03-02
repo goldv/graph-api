@@ -1,0 +1,128 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_border"
+    tools:context=".ExerciseViewActivity" >
+    
+    <LinearLayout
+        android:id="@+id/exercise_view_reps_layout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:orientation="horizontal"
+	    android:baselineAligned="false">
+	    <LinearLayout
+	        android:background="@drawable/custom_border" 
+            android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_horizontal"
+	        android:layout_weight="1">
+	        <TextView
+	            android:id="@+id/exercise_view_reps"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="60sp" />
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="reps"
+	            android:textSize="20sp" />
+		</LinearLayout>
+		<LinearLayout
+		    android:background="@drawable/custom_border" 
+		    android:layout_width="0dp"
+		    android:layout_height="fill_parent"
+		    android:gravity="center_horizontal"
+		    android:layout_weight="1">
+	        <TextView
+	            android:id="@+id/exercise_view_sets"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="60sp" />
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="sets"
+	            android:textSize="20sp" />
+		</LinearLayout>
+	</LinearLayout>
+	
+    <LinearLayout
+        android:id="@+id/exercise_view_duration_layout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@id/exercise_view_reps_layout"
+	    android:orientation="horizontal"
+	    android:baselineAligned="false">
+	    <RelativeLayout
+	        android:background="@drawable/custom_border" 
+            android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1">
+	        <TextView
+	            android:id="@+id/exercise_view_duration"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerHorizontal="true"
+	            android:textSize="60sp" />
+		</RelativeLayout>
+		<RelativeLayout
+		    android:background="@drawable/custom_border" 
+		    android:layout_width="0dp"
+		    android:layout_height="fill_parent"
+		    android:layout_weight="1">
+	        
+		    <View android:id="@+id/strut"
+        		android:layout_width="0dp"
+        		android:layout_height="0dp" 
+        		android:layout_centerHorizontal="true"/>
+	        <Button
+	            android:id="@+id/duration_start_stop_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_toLeftOf="@id/strut"
+	            android:layout_alignParentLeft="true"
+	            android:text="@string/duration_start_button"
+	            style="?android:attr/borderlessButtonStyle"  />
+	        
+	         <Button
+	            android:id="@+id/duration_reset_button"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:layout_toRightOf="@id/strut"
+	            android:layout_alignParentRight="true"
+	            android:text="@string/duration_reset_button"
+	            style="?android:attr/borderlessButtonStyle"  />
+	    </RelativeLayout>
+	</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/exercise_view_description_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/exercise_view_duration_layout"
+        android:background="@drawable/custom_border"
+        android:orientation="vertical" >
+
+	    <TextView
+	        android:id="@+id/exercise_view_description"
+	        android:layout_width="match_parent"
+	        android:layout_weight="0.8"
+	        android:layout_height="0dip"/>
+	    
+	    <View
+		    android:layout_width="fill_parent"
+		    android:layout_height="1dp"
+		    android:background="@android:color/darker_gray"/>
+	    
+	    <EditText
+	        android:hint="Notes"
+	        android:inputType="text"
+	        android:layout_width="match_parent"
+	        android:layout_weight="0.2"
+	        android:layout_height="0dip"/>
+	</LinearLayout>
+	    
+</RelativeLayout>
