@@ -14,9 +14,9 @@ object GraphLoader {
   def fromFile(file: String) = {
     log.info(s"loading graph from file $file")
 
-    val uri = getClass.getClassLoader.getResource(s"$file").toURI
+    val stream = getClass.getClassLoader.getResourceAsStream(s"$file")
 
-    val edges = Source.fromFile(uri).getLines().toList.foldRight(List.empty[(Int,Int)] ){ (line, accu) =>
+    val edges = Source.fromInputStream(stream).getLines().toList.foldRight(List.empty[(Int,Int)] ){ (line, accu) =>
       processLine(line, accu)
     }
 
