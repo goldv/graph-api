@@ -7,10 +7,6 @@ import scala.collection.mutable
  */
 trait SocialGraph {
 
-  private[social] val STATE_UNDISCOVERED = 0
-  private[social] val STATE_DISCOVERED = 1
-  private[social] val STATE_PROCESSED = 2
-
   def path(id1: Int, id2: Int): Option[List[Int]]
   def commonFriends(id1: Int, id2: Int): Option[Set[Int]]
   def nodeSize: Int
@@ -48,10 +44,8 @@ class DefaultSocialGraph(edges: List[(Int,Int)]) extends SocialGraph{
   
   def bfs(id1: Int, id2: Int): Option[mutable.Map[Int,Int]] = {
 
-    def bfsState(id: Int, state: mutable.Map[Int, Int]) = state.getOrElse(id,STATE_UNDISCOVERED)
-
     if(graph.contains(id1) && graph.contains(id2)){
-      val state = mutable.Map(id1 -> STATE_DISCOVERED)
+      val state = mutable.Set(id1)
 
       val q = mutable.Queue[Int]()
       q.enqueue(id1)
@@ -62,9 +56,9 @@ class DefaultSocialGraph(edges: List[(Int,Int)]) extends SocialGraph{
         val node = q.dequeue()
 
         for( edge <- graph(node) ){
-          if( bfsState(edge, state) == STATE_UNDISCOVERED) {
+          if( !state.contains(edge) ) {
             q.enqueue(edge)
-            state += (edge -> STATE_DISCOVERED)
+            state += edge
             path += (edge -> node)
 
             if(edge == id2) {
