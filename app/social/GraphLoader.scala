@@ -1,7 +1,6 @@
 package social
 
 import org.slf4j.LoggerFactory
-
 import scala.io.Source
 import scala.util.Try
 
@@ -13,6 +12,8 @@ object GraphLoader {
   val log = LoggerFactory.getLogger( GraphLoader.getClass )
 
   def fromFile(file: String) = {
+    log.info(s"loading graph from file $file")
+
     val uri = getClass.getClassLoader.getResource(s"$file").toURI
 
     val edges = Source.fromFile(uri).getLines().toList.foldRight(List.empty[(Int,Int)] ){ (line, accu) =>

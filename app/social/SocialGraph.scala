@@ -1,10 +1,17 @@
 package social
 
+import scala.collection.mutable
+
 /**
  * Created by vince on 14/02/2015.
  */
 trait SocialGraph {
-  def distance(id1: Int, id2: Int): Option[Int]
+
+  private[social] val STATE_UNDISCOVERED = 0
+  private[social] val STATE_DISCOVERED = 1
+  private[social] val STATE_PROCESSED = 2
+
+  def path(id1: Int, id2: Int): Option[List[Int]]
   def commonFriends(id1: Int, id2: Int): Option[Set[Int]]
   def nodeSize: Int
   def edgeSize: Int
@@ -19,15 +26,55 @@ class DefaultSocialGraph(edges: List[(Int,Int)]) extends SocialGraph{
   lazy val nodeSize = graph.size
   lazy val edgeSize = graph.map{ case (k, v) => v.size }.sum / 2
 
-  def distance(id1: Int, id2: Int): Option[Int] = {
-    Some(0)
+  def path(id1: Int, id2: Int): Option[List[Int]] = {
+
+    bfs(id1, id2).map { parentMap =>
+      var path: List[Int] = id2 :: Nil
+      var parent = parentMap(id2)
+
+      while(parent >= 0) {
+        path = parent :: path
+        parent = parentMap(parent)
+      }
+
+      path
+    }
   }
 
   def commonFriends(id1: Int, id2: Int): Option[Set[Int]] = for {
     friends1 <- graph.get(id1)
     friends2 <- graph.get(id2)
   } yield friends1 & friends2
+  
+  def bfs(id1: Int, id2: Int): Option[mutable.Map[Int,Int]] = {
 
+    def bfsState(id: Int, state: mutable.Map[Int, Int]) = state.getOrElse(id,STATE_UNDISCOVERED)
+
+    if(graph.contains(id1) && graph.contains(id2)){
+      val state = mutable.Map(id1 -> STATE_DISCOVERED)
+
+      val q = mutable.Queue[Int]()
+      q.enqueue(id1)
+
+      val path = mutable.Map( id1 -> -1)
+
+      while(!q.isEmpty) {
+        val node = q.dequeue()
+
+        for( edge <- graph(node) ){
+          if( bfsState(edge, state) == STATE_UNDISCOVERED) {
+            q.enqueue(edge)
+            state += (edge -> STATE_DISCOVERED)
+            path += (edge -> node)
+
+            if(edge == id2) {
+              return Some( path )
+            }
+          }
+        }
+      }
+    }; None
+  }
 }
 
 object DefaultSocialGraph{

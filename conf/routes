@@ -1,7 +1,2 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /distance/:id1/:id2         controllers.Controller.getDistance(id1: Long, id2: Long)
-GET     /common_friends/:id1/:id2   controllers.Controller.getCommonFriends(id1: Long, id2: Long)
+GET     /distance/:id1/:id2         @controllers.SocialGraphController.getDistance(id1: Int, id2: Int)
+GET     /common_friends/:id1/:id2   @controllers.SocialGraphController.getCommonFriends(id1: Int, id2: Int)

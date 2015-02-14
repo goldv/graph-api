@@ -19,8 +19,25 @@ class SocialGraphSpec extends Specification{
     "show that 4017 & 3982 have the friends 3980,3986,4014,4021,4026,4030] in common" in{
       g.commonFriends(4017, 3982) must be equalTo Some( Set(3980,3986,4014,4021,4026,4030) )
     }
+    "show that 3982 & 4017 have the friends 3980,3986,4014,4021,4026,4030] in common" in{
+      g.commonFriends(3982, 4017) must be equalTo Some( Set(3980,3986,4014,4021,4026,4030) )
+    }
     "show no common friends for out of range id" in{
-      g.commonFriends(5000, 0) must be equalTo None
+      g.commonFriends(5000, 0) must beNone
+    }
+    "have a distance of 3 between 4017 & 3982" in{
+      val path = g.path(4017, 3982)
+
+      path.exists(_.length == 3) must beTrue
+    }
+    "have a distance of 3 between 3982 & 4017" in{
+      val path = g.path(3982, 4017)
+
+      path.exists(_.length == 3) must beTrue
+    }
+    "show no possible path for nodes 20 & 5000" in{
+      val path = g.path(20, 5000)
+      path must beNone
     }
   }
 
