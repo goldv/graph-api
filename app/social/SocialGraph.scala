@@ -1,5 +1,6 @@
 package social
 
+import scala.annotation.tailrec
 import scala.collection.mutable
 
 /**
@@ -7,8 +8,8 @@ import scala.collection.mutable
  */
 trait SocialGraph {
 
-  def path(id1: Int, id2: Int): Option[List[Int]]
-  def commonFriends(id1: Int, id2: Int): Option[Set[Int]]
+  def path(id1: Int, id2: Int): List[Int]
+  def commonFriends(id1: Int, id2: Int): Set[Int]
   def nodeSize: Int
   def edgeSize: Int
 }
@@ -22,52 +23,55 @@ class DefaultSocialGraph(edges: List[(Int,Int)]) extends SocialGraph{
   lazy val nodeSize = graph.size
   lazy val edgeSize = graph.map{ case (k, v) => v.size }.sum / 2
 
-  def path(id1: Int, id2: Int): Option[List[Int]] = {
-
-    bfs(id1, id2).map { parentMap =>
-      var path: List[Int] = id2 :: Nil
-      var parent = parentMap(id2)
-
-      while(parent >= 0) {
-        path = parent :: path
-        parent = parentMap(parent)
-      }
-
-      path
-    }
+  def path(id1: Int, id2: Int): List[Int] = {
+    if(id1 == id2) List(id1)
+    else bfs(id1, id2)
   }
 
-  def commonFriends(id1: Int, id2: Int): Option[Set[Int]] = for {
-    friends1 <- graph.get(id1)
-    friends2 <- graph.get(id2)
-  } yield friends1 & friends2
-  
-  def bfs(id1: Int, id2: Int): Option[mutable.Map[Int,Int]] = {
+  def commonFriends(id1: Int, id2: Int): Set[Int] = {
+    val cfriends = for {
+      friends1 <- graph.get(id1)
+      friends2 <- graph.get(id2)
+    } yield friends1 & friends2
+
+    cfriends.getOrElse(Set.empty[Int])
+  }
+
+  @tailrec
+  private def _parent(id: Int, parents: Map[Int, Int], path: List[Int]): List[Int] = {
+    if(id < 0) path
+    else _parent(parents(id), parents, id :: path )
+  }
+
+  /**
+   * breadth first search returns shortest path or Nil if not connected
+   */
+  def bfs(id1: Int, id2: Int): List[Int] = {
 
     if(graph.contains(id1) && graph.contains(id2)){
-      val state = mutable.Set(id1)
+      val discovered = mutable.Set(id1)
 
       val q = mutable.Queue[Int]()
       q.enqueue(id1)
 
-      val path = mutable.Map( id1 -> -1)
+      var parents = Map( id1 -> -1 )
 
-      while(!q.isEmpty) {
+      while(q.nonEmpty) {
         val node = q.dequeue()
 
         for( edge <- graph(node) ){
-          if( !state.contains(edge) ) {
+          if( !discovered.contains(edge) ) {
             q.enqueue(edge)
-            state += edge
-            path += (edge -> node)
+            discovered += edge
+            parents = parents + (edge -> node)
 
             if(edge == id2) {
-              return Some( path )
+              return _parent(id2, parents, Nil )
             }
           }
         }
       }
-    }; None
+    }; Nil
   }
 }
 

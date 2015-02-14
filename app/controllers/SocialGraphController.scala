@@ -11,14 +11,16 @@ import social.SocialGraph
 class SocialGraphController @Inject()(graph: SocialGraph) extends Controller{
 
   def getDistance(id1: Int, id2: Int) = Action{
-    graph.path(id1,id2).map{ path =>
-      Ok( Json.obj("distance" -> path.length, "possible_path" -> path))
-    } getOrElse NotFound( Json.obj("reason" -> "there is no path possible between the two nodes given") )
+    val path = graph.path(id1,id2)
+
+    if(path.nonEmpty) Ok( Json.obj("distance" -> path.length, "possible_path" -> path))
+    else NotFound( Json.obj("reason" -> "there is no path possible between the two nodes given") )
   }
 
   def getCommonFriends(id1: Int, id2: Int) = Action{
-    graph.commonFriends(id1,id2).map{ commonFriends =>
-      Ok( Json.obj("common_friends" -> commonFriends) )
-    } getOrElse  NotFound( Json.obj("reason" -> "no common friends found for the two nodes given") )
+    val commonFriends = graph.commonFriends(id1,id2)
+
+    if(commonFriends.nonEmpty) Ok( Json.obj("common_friends" -> commonFriends) )
+    else NotFound( Json.obj("reason" -> "no common friends found for the two nodes given") )
   }
 }
