@@ -1,4 +1,4 @@
-name := "centralway-challenge"
+name := "graph-api"
 
 version := "1.0-SNAPSHOT"
 
